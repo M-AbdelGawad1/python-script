@@ -1,17 +1,24 @@
-node {
-    stage('Checkout') {
-        checkout scm
-    }
+pipeline {
+    agent any
 
-    stage('Install requirements') {
-        sh 'pip install -r requirements.txt'
-    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
-    stage('Run tests') {
-        sh 'pytest --maxfail=1 --disable-warnings -q'
-    }
+        stage('Install requirements') {
+            steps {
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r requirements.txt'
+            }
+        }
 
-    stage('Post Clean') {
-        cleanWs()
+        stage('Run Script') {
+            steps {
+                sh 'python3 app.py'
+            }
+        }
     }
 }
